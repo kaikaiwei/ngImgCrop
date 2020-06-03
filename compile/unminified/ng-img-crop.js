@@ -1590,8 +1590,14 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
               ctx.rotate(deg*Math.PI/180);
               ctx.drawImage(newImage, cx, cy);
 
-              image=new Image();
-              image.src = canvas.toDataURL("image/png");
+              var tmp = new Image();
+              tmp.src = canvas.toDataURL("image/png");
+              tmp.onload = function() {
+                image = tmp;
+                setTimeout(function () {
+                  resetCropHost();
+                  events.trigger('image-updated');
+                }, 20 );
             } else {
               image=newImage;
             }
