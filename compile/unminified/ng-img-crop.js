@@ -1556,7 +1556,6 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
           newImage.crossOrigin = 'anonymous';
         }
         newImage.onload = function(){
-          events.trigger('load-done');
 
           cropEXIF.getData(newImage,function(){
             var orientation=cropEXIF.getTag(newImage,'Orientation');
@@ -1591,14 +1590,17 @@ crop.factory('cropHost', ['$document', 'cropAreaCircle', 'cropAreaSquare', 'crop
               ctx.drawImage(newImage, cx, cy);
 
               var tmp = new Image();
-              tmp.src = canvas.toDataURL("image/png");
+              tmp.src = canvas.toDataURL("image/png", 0.8);
               tmp.onload = function() {
                 image = tmp;
                 setTimeout(function () {
+                  events.trigger('load-done');
                   resetCropHost();
                   events.trigger('image-updated');
-                }, 20 );
+                }, 20 )
+              }
             } else {
+              events.trigger('load-done');
               image=newImage;
             }
             resetCropHost();
